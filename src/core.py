@@ -3,6 +3,7 @@ import urllib
 import urllib2
 import datetime
 import locale
+import os
 import re
 
 class Kushizashi(object):
@@ -35,7 +36,13 @@ class Kushizashi(object):
         html = res.read()
         # 先頭20個のプロキシ取得
         proxies = re.findall("[0-9]+\.(.*?:[0-9]+)",html)[0:20]
-        f = open('../db/proxies','w')
         self.proxy_list = proxies
-        f.close
+        save_path = os.path.dirname(__file__) + "/../db"
+        print save_path
+        f = open( save_path+"/proxies" ,'w')
+        # DBの更新
+        f.write("[proxy_servers]\n")
+        for ip in proxies:
+            f.write(ip+"\n")
+        f.close()
         return True
