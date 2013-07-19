@@ -5,6 +5,15 @@ import datetime
 import locale
 import os
 import re
+import random
+import time
+from multiprocessing import Pool,Process,Lock
+
+# クローリング実行内容
+def perform(hostname,data):
+    time.sleep(random.random())
+    print hostname
+    print data
 
 class Kushizashi(object):
     # Cybersyndromeさんにお世話になります
@@ -46,3 +55,16 @@ class Kushizashi(object):
             f.write(ip+"\n")
         f.close()
         return True
+
+
+
+    # 並列でクローリングする
+    # datasの1要素がperformの引数
+    def paralell_crawling(self,url,datas=[]):
+        index = 0
+        for data in datas:
+            p = Process(target=perform, args=(self.proxy_list[index],data,))
+            p.start()
+            index += 1
+            #p.join() #　並列実行しない場合
+
